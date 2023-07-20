@@ -29,8 +29,8 @@ export default async function handler(
     s3: {
       accessKey: process.env.AWS_ACCESS_KEY,
       secret: process.env.AWS_SECRET,
-      region: 'eu-west-2',
-      bucket: 'nextauth-bucket-dev',
+      region: process.env.AWS_REGION,
+      bucket: process.env.AWS_BUCKET,
     },
   };
 
