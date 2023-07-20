@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ActiveRoom } from '../../components/rooms';
 
-const Home: NextPage = () => {
+const Room: NextPage = () => {
   const router = useRouter();
   const { name: roomName } = router.query;
 
@@ -22,9 +22,7 @@ const Home: NextPage = () => {
           <ActiveRoom
             roomName={roomName}
             userChoices={preJoinChoices}
-            onLeave={() => {
-              router.push('/');
-            }}
+            onLeave={() => router.push('/')}
           />
         ) : (
           <div style={{ display: 'grid', placeItems: 'center', height: '100%' }}>
@@ -47,4 +45,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Room;

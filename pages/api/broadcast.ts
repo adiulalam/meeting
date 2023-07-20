@@ -27,8 +27,8 @@ export default async function handler(
     fileType: EncodedFileType.MP4,
     filepath: 'livekit-demo/{room_name}_{time}.mp4',
     s3: {
-      accessKey: 'AKIAV5TXOWUKC3TKUXWM',
-      secret: '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',
+      accessKey: process.env.AWS_ACCESS_KEY,
+      secret: process.env.AWS_SECRET,
       region: 'eu-west-2',
       bucket: 'nextauth-bucket-dev',
     },

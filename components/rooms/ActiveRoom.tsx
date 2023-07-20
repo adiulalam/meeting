@@ -20,7 +20,7 @@ export const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) 
   });
 
   const router = useRouter();
-  const { region, hq } = router.query;
+  const { region } = router.query;
 
   const liveKitUrl = useServerUrl(region as string | undefined);
 
@@ -28,13 +28,10 @@ export const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) 
     return {
       videoCaptureDefaults: {
         deviceId: userChoices.videoDeviceId ?? undefined,
-        resolution: hq === 'true' ? VideoPresets.h2160 : VideoPresets.h720,
+        resolution: VideoPresets.h1080,
       },
       publishDefaults: {
-        videoSimulcastLayers:
-          hq === 'true'
-            ? [VideoPresets.h1080, VideoPresets.h720]
-            : [VideoPresets.h540, VideoPresets.h216],
+        videoSimulcastLayers: [VideoPresets.h1080, VideoPresets.h720],
       },
       audioCaptureDefaults: {
         deviceId: userChoices.audioDeviceId ?? undefined,
@@ -42,7 +39,7 @@ export const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) 
       adaptiveStream: { pixelDensity: 'screen' },
       dynacast: true,
     };
-  }, [userChoices, hq]);
+  }, [userChoices]);
 
   async function onClickHandler() {
     await fetch('/api/broadcast', {
