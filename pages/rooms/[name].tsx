@@ -1,20 +1,9 @@
-import {
-  LiveKitRoom,
-  PreJoin,
-  LocalUserChoices,
-  useToken,
-  VideoConference,
-  formatChatMessageLinks,
-  ParticipantTile,
-} from '@livekit/components-react';
-import { LogLevel, RoomOptions, VideoPresets } from 'livekit-client';
-
+import { PreJoin, LocalUserChoices } from '@livekit/components-react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
-import { DebugMode } from '../../lib/Debug';
-import { useServerUrl } from '../../lib/client-utils';
+import { useState } from 'react';
+import { ActiveRoom } from '../../components/rooms';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -36,7 +25,7 @@ const Home: NextPage = () => {
             onLeave={() => {
               router.push('/');
             }}
-          ></ActiveRoom>
+          />
         ) : (
           <div style={{ display: 'grid', placeItems: 'center', height: '100%' }}>
             <PreJoin
@@ -59,70 +48,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-type ActiveRoomProps = {
-  userChoices: LocalUserChoices;
-  roomName: string;
-  region?: string;
-  onLeave?: () => void;
-};
-const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
-  const token = useToken(process.env.NEXT_PUBLIC_LK_TOKEN_ENDPOINT, roomName, {
-    userInfo: {
-      identity: userChoices.username,
-      name: userChoices.username,
-    },
-  });
-
-  const router = useRouter();
-  const { region, hq } = router.query;
-
-  const liveKitUrl = useServerUrl(region as string | undefined);
-
-  const roomOptions = useMemo((): RoomOptions => {
-    return {
-      videoCaptureDefaults: {
-        deviceId: userChoices.videoDeviceId ?? undefined,
-        resolution: hq === 'true' ? VideoPresets.h2160 : VideoPresets.h720,
-      },
-      publishDefaults: {
-        videoSimulcastLayers:
-          hq === 'true'
-            ? [VideoPresets.h1080, VideoPresets.h720]
-            : [VideoPresets.h540, VideoPresets.h216],
-      },
-      audioCaptureDefaults: {
-        deviceId: userChoices.audioDeviceId ?? undefined,
-      },
-      adaptiveStream: { pixelDensity: 'screen' },
-      dynacast: true,
-    };
-  }, [userChoices, hq]);
-
-  async function onClickHandler() {
-    await fetch('/api/broadcast', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ room_name: roomName }),
-    });
-  }
-
-  return (
-    <>
-      {liveKitUrl && (
-        <LiveKitRoom
-          token={token}
-          serverUrl={liveKitUrl}
-          options={roomOptions}
-          video={userChoices.videoEnabled}
-          audio={userChoices.audioEnabled}
-          onDisconnected={onLeave}
-        >
-          <button onClick={onClickHandler}>Record Meeting</button>
-          <VideoConference chatMessageFormatter={formatChatMessageLinks} />
-          <DebugMode logLevel={LogLevel.info} />
-        </LiveKitRoom>
-      )}
-    </>
-  );
-};

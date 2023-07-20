@@ -51,7 +51,12 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
       canPublish: true,
       canPublishData: true,
       canSubscribe: true,
-      canPublishSources: [TrackSource.CAMERA],
+      canPublishSources: [
+        TrackSource.CAMERA,
+        TrackSource.MICROPHONE,
+        TrackSource.SCREEN_SHARE,
+        TrackSource.SCREEN_SHARE_AUDIO,
+      ],
     };
 
     const token = createToken({ identity, name, metadata }, grant);
