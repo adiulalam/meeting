@@ -7,7 +7,7 @@ import { ActiveRoom } from '../../components/rooms';
 
 const Room: NextPage = () => {
   const router = useRouter();
-  const { name: roomName } = router.query;
+  const { id: roomName } = router.query;
 
   const [preJoinChoices, setPreJoinChoices] = useState<LocalUserChoices | undefined>(undefined);
   return (
@@ -37,7 +37,7 @@ const Room: NextPage = () => {
                 console.log('Joining with: ', values);
                 setPreJoinChoices(values);
               }}
-            ></PreJoin>
+            />
           </div>
         )}
       </main>
