@@ -5,6 +5,7 @@ import {
   useToken,
   VideoConference,
   formatChatMessageLinks,
+  ParticipantTile,
 } from '@livekit/components-react';
 import { LogLevel, RoomOptions, VideoPresets } from 'livekit-client';
 
@@ -98,6 +99,14 @@ const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
     };
   }, [userChoices, hq]);
 
+  async function onClickHandler() {
+    await fetch('/api/broadcast', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ room_name: roomName }),
+    });
+  }
+
   return (
     <>
       {liveKitUrl && (
@@ -109,6 +118,7 @@ const ActiveRoom = ({ roomName, userChoices, onLeave }: ActiveRoomProps) => {
           audio={userChoices.audioEnabled}
           onDisconnected={onLeave}
         >
+          <button onClick={onClickHandler}>Record Meeting</button>
           <VideoConference chatMessageFormatter={formatChatMessageLinks} />
           <DebugMode logLevel={LogLevel.info} />
         </LiveKitRoom>

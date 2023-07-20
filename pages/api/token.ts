@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { AccessToken } from 'livekit-server-sdk';
+import { AccessToken, TrackSource } from 'livekit-server-sdk';
 import type { AccessTokenOptions, VideoGrant } from 'livekit-server-sdk';
 import { TokenResult } from '../../lib/types';
 
@@ -51,6 +51,7 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
       canPublish: true,
       canPublishData: true,
       canSubscribe: true,
+      canPublishSources: [TrackSource.CAMERA],
     };
 
     const token = createToken({ identity, name, metadata }, grant);
