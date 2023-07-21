@@ -14,7 +14,8 @@ const createToken = (userInfo: AccessTokenOptions, grant: VideoGrant) => {
   return at.toJwt();
 };
 
-const roomPattern = /\w{4}\-\w{4}/;
+const roomPattern =
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89AB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/i;
 
 export default async function handleToken(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -32,10 +33,10 @@ export default async function handleToken(req: NextApiRequest, res: NextApiRespo
       throw Error('provide max one metadata string');
     }
 
-    // enforce room name to be xxxx-xxxx
+    // enforce room name to be uuid
     // this is simple & naive way to prevent user from guessing room names
     // please use your own authentication mechanisms in your own app
-    if (!roomName.match(roomPattern)) {
+    if (!roomPattern.test(roomName)) {
       res.status(400).end();
       return;
     }
