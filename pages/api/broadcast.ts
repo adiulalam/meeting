@@ -27,7 +27,7 @@ export default async function handler(
     fileType: EncodedFileType.MP4,
     filepath: 'livekit-demo/{room_name}_{time}.mp4',
     s3: {
-      accessKey: process.env.AWS_ACCESS_KEY,
+      accessKey: process.env.AWS_SECRET_ACCESS_KEY,
       secret: process.env.AWS_SECRET,
       region: process.env.AWS_REGION,
       bucket: process.env.AWS_BUCKET,
