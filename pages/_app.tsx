@@ -3,8 +3,18 @@ import type { AppProps } from 'next/app';
 import '@livekit/components-styles';
 import '@livekit/components-styles/prefabs';
 import { DefaultSeo } from 'next-seo';
+import { MeetingHeader } from '../components';
+import styles from '../styles/Home.module.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const maintenanceMode = process.env.NEXT_PUBLIC_DISABLE_MAINTENANCE_MODE as any;
+  if (maintenanceMode != 1) {
+    return (
+      <main className={styles.main} data-lk-theme="default">
+        <MeetingHeader />
+      </main>
+    );
+  }
   return (
     <>
       <DefaultSeo
